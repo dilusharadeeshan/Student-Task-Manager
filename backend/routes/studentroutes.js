@@ -55,5 +55,22 @@ router.put("/:id", async (req, res) => {
   }
 });
 
+
+router.delete("/:id", async (req, res) => {
+  try {
+    const student = await Student.findByIdAndDelete(req.params.id);
+
+    res.status(200).json({
+      message: "Student deleted successfully",
+      student
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: error.message
+    });
+  }
+});
+
+
 export default router;
 
