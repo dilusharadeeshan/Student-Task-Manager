@@ -8,12 +8,15 @@ import dotenv from "dotenv";
 dotenv.config();
 
 import studentRoutes from "./routes/studentroutes.js";
+import errorMiddleware from "./middleware/errorMiddleware.js";
 
 const app = express();
 
 app.use(express.json());
 
 app.use("/students", studentRoutes);
+app.use(errorMiddleware);
+
 
 mongoose.connect(process.env.MONGODB_URI).then(()=>{
     console.log("mongo connected");

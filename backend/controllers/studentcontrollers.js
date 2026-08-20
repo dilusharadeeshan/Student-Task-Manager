@@ -1,74 +1,69 @@
 import Student from "../models/student.js";
+import asyncHandler from "../middleware/asyncHandler.js";
 
 //create student
-export const createStudent =async (req, res) => {
- try{
+export const createStudent = asyncHandler(async (req, res) => {
+ 
   const student = await Student.create(req.body);
 
   res.status(201).json(student);
-  }catch(error) {
-    res.status(500).json(error);
-  }
-};
+ 
+});
 
 //get all students
-export const getAllStudents = async (req, res) => {
-  try {
-    const students = await Student.find();
+export const getAllStudents = asyncHandler(async (req, res) => {
+  const students = await Student.find();
 
-    res.status(200).json(students);
-  } catch (error) {
-    res.status(500).json({
-      message: error.message
-    });
-  }
-};
+  res.status(200).json(students);
+});
 
 //get student by id
-export const getStudentById =async (req, res) => {
-  try {
-    const student = await Student.findById(req.params.id);    
-    
-    res.status(200).json(student);
-  } catch (error) {
-    res.status(500).json({
-      message: error.message
+export const getStudentById = asyncHandler(async (req, res) => {
+  const student = await Student.findById(req.params.id);
+
+
+   if (!student) {
+    return res.status(404).json({
+      message: "Student not found"
     });
   }
-};
+
+  res.status(200).json(student);
+});
+
 
 //update student
-export const updateStudent = async (req, res) => {
-  try {
+export const updateStudent =asyncHandler( async (req, res, next) => {
+  
     const student = await Student.findByIdAndUpdate(
       req.params.id,
       req.body,
       { new: true }
     );
-
-    res.status(200).json(student);
-  } catch (error) {
-    res.status(500).json({
-      message: error.message
+ if (!student) {
+    return res.status(404).json({
+      message: "Student not found"
     });
   }
-};
+
+    res.status(200).json(student);
+  
+});
 
 //delete student
-export const deleteStudent =  async (req, res) => {
-  try {
-    const student = await Student.findByIdAndDelete(req.params.id);
+export const deleteStudent =  asyncHandler( async (req, res) => {
 
+    const student = await Student.findByIdAndDelete(req.params.id);
+  if (!student) {
+    return res.status(404).json({
+      message: "Student not found"
+    });
+  }
     res.status(200).json({
       message: "Student deleted successfully",
       student
     });
-  } catch (error) {
-    res.status(500).json({
-      message: error.message
-    });
-  }
-};
+});
 
 
 
