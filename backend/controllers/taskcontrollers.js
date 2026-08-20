@@ -39,6 +39,15 @@ export const getTaskById =asyncHandler(async (req,res)=> {
 });
 
 export const updateTask = asyncHandler(async (req, res) => {
+ if (req.body.student) {
+    const student = await Student.findById(req.body.student);
+
+    if (!student) {
+      throw new AppError("Student not found", 404);
+    }
+  }
+
+
   const task = await Task.findByIdAndUpdate(
     req.params.id,
     req.body,
