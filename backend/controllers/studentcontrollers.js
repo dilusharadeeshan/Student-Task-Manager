@@ -1,5 +1,6 @@
 import Student from "../models/student.js";
 import asyncHandler from "../middleware/asyncHandler.js";
+import AppError from "../utils/appError.js";
 
 //create student
 export const createStudent = asyncHandler(async (req, res) => {
@@ -23,9 +24,7 @@ export const getStudentById = asyncHandler(async (req, res) => {
 
 
    if (!student) {
-    return res.status(404).json({
-      message: "Student not found"
-    });
+       throw new AppError("Student not found", 404);
   }
 
   res.status(200).json(student);
