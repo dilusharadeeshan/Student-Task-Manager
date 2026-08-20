@@ -22,7 +22,11 @@ const taskSchema = new mongoose.Schema({
   ref: "Student",
   required: true
 }
-});
+},
+{
+    timestamps: true
+  }
+);
 
 const Task = mongoose.model("Task", taskSchema);
 
