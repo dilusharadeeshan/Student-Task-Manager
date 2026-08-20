@@ -8,6 +8,14 @@ const errorMiddleware = (err, req, res, next) => {
       message = "Invalid ID format";
     }
 
+    if (err.name === "ValidationError") {
+    statusCode = 400;
+
+    message = Object.values(err.errors)
+      .map((error) => error.message)
+      .join(", ");
+  }
+  
      if (err.code === 11000) {
     statusCode = 409;
     message = "Email already exists";
