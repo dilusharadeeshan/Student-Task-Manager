@@ -13,7 +13,11 @@ const studentSchema = new mongoose.Schema({
     required: [true, "Email is required"],
     unique: true,
     trim: true,
-    lowercase: true
+    lowercase: true,
+     match: [
+    /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+    "Please enter a valid email"
+  ]
   },
 
   age: {
