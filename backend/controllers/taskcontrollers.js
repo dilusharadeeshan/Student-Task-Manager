@@ -17,7 +17,13 @@ export const createTask = asyncHandler(async (req, res) => {
 });
 
 export const getTasks = asyncHandler(async (req, res) => {
-  const tasks = await Task.find().populate("student");
+    const filter = {};
+
+    if(req.query.student){
+        filter.student = req.query.student;
+    }
+
+  const tasks = await Task.find(filter).populate("student");
 
   res.status(200).json(tasks);
 });
