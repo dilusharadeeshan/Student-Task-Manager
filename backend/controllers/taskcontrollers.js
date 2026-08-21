@@ -23,7 +23,14 @@ export const getTasks = asyncHandler(async (req, res) => {
         filter.student = req.query.student;
     }
 
-  const tasks = await Task.find(filter).populate("student");
+    let sortOption = { createdAt: -1 };
+
+  if (req.query.sort === "oldest") {
+    sortOption = { createdAt: 1 };
+  }
+
+
+  const tasks = await Task.find(filter).sort(sortOption).populate("student", "name email");
 
   res.status(200).json(tasks);
 });
@@ -39,6 +46,15 @@ export const getTaskById =asyncHandler(async (req,res)=> {
 });
 
 export const updateTask = asyncHandler(async (req, res) => {
+ if (req.body.student) {
+    const student = await Student.findById(req.body.student);
+
+    if (!student) {
+      throw new AppError("Student not found", 404);
+    }
+  }
+
+
   const task = await Task.findByIdAndUpdate(
     req.params.id,
     req.body,
