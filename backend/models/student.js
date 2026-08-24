@@ -25,6 +25,13 @@ const studentSchema = new mongoose.Schema({
     required: [true, "Age is required"],
     min: [1, "Age must be at least 1"],
     max: [120, "Age cannot be greater than 120"]
+  },
+
+  password: {
+  type: String,
+  required: [true, "Password is required"],
+  minlength: [6, "Password must be at least 6 characters"],
+  select: false
   }
 });
 
