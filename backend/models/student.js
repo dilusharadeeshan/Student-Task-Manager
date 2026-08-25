@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import bcrypt from "bcrypt";
 
 const studentSchema = new mongoose.Schema({
   name: {
@@ -14,10 +15,10 @@ const studentSchema = new mongoose.Schema({
     unique: true,
     trim: true,
     lowercase: true,
-     match: [
-    /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-    "Please enter a valid email"
-  ]
+    match: [
+      /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+      "Please enter a valid email"
+    ]
   },
 
   age: {
@@ -28,11 +29,19 @@ const studentSchema = new mongoose.Schema({
   },
 
   password: {
-  type: String,
-  required: [true, "Password is required"],
-  minlength: [6, "Password must be at least 6 characters"],
-  select: false
+    type: String,
+    required: [true, "Password is required"],
+    minlength: [6, "Password must be at least 6 characters"],
+    select: false
   }
+});
+
+studentSchema.pre("save", async function () {
+  if (!this.isModified("password")) {
+    return;
+  }
+
+  this.password = await bcrypt.hash(this.password, 10);
 });
 
 const Student = mongoose.model("Student", studentSchema);

@@ -10,6 +10,7 @@ dotenv.config();
 import studentRoutes from "./routes/studentroutes.js";
 import errorMiddleware from "./middleware/errorMiddleware.js";
 import taskRoutes from "./routes/taskroutes.js";
+import authRoutes from "./routes/authroutes.js";
 
 const app = express();
 
@@ -17,6 +18,7 @@ app.use(express.json());
 
 app.use("/students", studentRoutes);
 app.use("/tasks", taskRoutes);
+app.use("/auth", authRoutes);
 
 app.use(errorMiddleware);
 
