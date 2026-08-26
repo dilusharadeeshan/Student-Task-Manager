@@ -1,4 +1,5 @@
 import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
 
 import Student from "../models/student.js";
 import asyncHandler from "../middleware/asyncHandler.js";
@@ -26,7 +27,18 @@ export const loginStudent = asyncHandler(async (req, res) => {
     throw new AppError("Invalid email or password", 401);
   }
 
-  res.status(200).json({
-    message: "Login successful"
-  });
+  const token = jwt.sign(
+  {
+    studentId: student._id
+  },
+  process.env.JWT_SECRET,
+  {
+    expiresIn: "1d"
+  }
+);
+
+ res.status(200).json({
+  message: "Login successful",
+  token
+});
 });

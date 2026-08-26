@@ -1,4 +1,5 @@
 import express from "express";
+import protect from "../middleware/authMiddleware.js";
 import { createTask,
         getTasks,
         getTaskById,
@@ -9,7 +10,7 @@ import { createTask,
 const router = express.Router();
 
 router.post("/", createTask);
-router.get("/", getTasks)
+router.get("/",protect, getTasks)
 router.get("/:id", getTaskById);
 router.put("/:id", updateTask);
 router.delete("/:id", deleteTask);
