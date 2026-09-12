@@ -17,12 +17,9 @@ export const createTask = asyncHandler(async (req, res) => {
 });
 
 export const getTasks = asyncHandler(async (req, res) => {
-    const filter = {};
+    const filter = {student: req.student._id};
 
-    if(req.query.student){
-        filter.student = req.query.student;
-    }
-
+   
     let sortOption = { createdAt: -1 };
 
   if (req.query.sort === "oldest") {
