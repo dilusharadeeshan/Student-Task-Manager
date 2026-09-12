@@ -81,13 +81,17 @@ if (limit > 100) {
 });
 
 
-export const getTaskById =asyncHandler(async (req,res)=> {
-    const task = await Task.findById(req.params.id).populate("student");
+export const getTaskById = asyncHandler(async (req, res) => {
+  const task = await Task.findOne({
+    _id: req.params.id,
+    student: req.student._id
+  }).populate("student", "name email");
 
-    if (!task) {
-        throw new AppError("Task not found", 404);
-    }
-    res.status(200).json(task);
+  if (!task) {
+    throw new AppError("Task not found", 404);
+  }
+
+  res.status(200).json(task);
 });
 
 export const updateTask = asyncHandler(async (req, res) => {
