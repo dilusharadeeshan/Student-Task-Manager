@@ -60,10 +60,23 @@ export const registerStudent = asyncHandler(async (req, res) => {
     password
   });
 
+  
   const studentResponse = await Student.findById(student._id);
+
+   const token = jwt.sign(
+    {
+      studentId: student._id
+    },
+    process.env.JWT_SECRET,
+    {
+      expiresIn: "1d"
+    }
+  );
+
 
   res.status(201).json({
     message: "Student registered successfully",
-    student: studentResponse
+    student: studentResponse,
+    token
   });
 });
