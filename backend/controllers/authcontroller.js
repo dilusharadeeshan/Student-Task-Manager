@@ -42,3 +42,28 @@ export const loginStudent = asyncHandler(async (req, res) => {
   token
 });
 });
+
+
+export const registerStudent = asyncHandler(async (req, res) => {
+  const { name, email, age, password } = req.body;
+
+  const existingStudent = await Student.findOne({ email });
+
+  if (existingStudent) {
+    throw new AppError("Email already exists", 409);
+  }
+
+  const student = await Student.create({
+    name,
+    email,
+    age,
+    password
+  });
+
+  const studentResponse = await Student.findById(student._id);
+
+  res.status(201).json({
+    message: "Student registered successfully",
+    student: studentResponse
+  });
+});
