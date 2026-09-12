@@ -80,3 +80,10 @@ export const registerStudent = asyncHandler(async (req, res) => {
     token
   });
 });
+
+
+export const getCurrentStudent = asyncHandler(async (req, res) => {
+  res.status(200).json({
+    student: req.student
+  });
+});
