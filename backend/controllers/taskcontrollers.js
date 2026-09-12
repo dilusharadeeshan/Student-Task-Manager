@@ -5,24 +5,20 @@ import AppError from "../utils/appError.js";
 
 export const createTask = asyncHandler(async (req, res) => {
 
-  const student = await Student.findById(req.body.student);
-
-  if (!student) {
-    throw new AppError("Student not found", 404);
-  }
-
-  const task = await Task.create(req.body);
+   const task = await Task.create({
+    title: req.body.title,
+    description: req.body.description,
+    completed: req.body.completed,
+    student: req.student._id
+  });
 
   res.status(201).json(task);
 });
 
 export const getTasks = asyncHandler(async (req, res) => {
-    const filter = {};
+    const filter = {student: req.student._id};
 
-    if(req.query.student){
-        filter.student = req.query.student;
-    }
-
+   
     let sortOption = { createdAt: -1 };
 
   if (req.query.sort === "oldest") {
@@ -85,33 +81,35 @@ if (limit > 100) {
 });
 
 
-export const getTaskById =asyncHandler(async (req,res)=> {
-    const task = await Task.findById(req.params.id).populate("student");
+export const getTaskById = asyncHandler(async (req, res) => {
+  const task = await Task.findOne({
+    _id: req.params.id,
+    student: req.student._id
+  }).populate("student", "name email");
 
-    if (!task) {
-        throw new AppError("Task not found", 404);
-    }
-    res.status(200).json(task);
+  if (!task) {
+    throw new AppError("Task not found", 404);
+  }
+
+  res.status(200).json(task);
 });
 
 export const updateTask = asyncHandler(async (req, res) => {
- if (req.body.student) {
-    const student = await Student.findById(req.body.student);
-
-    if (!student) {
-      throw new AppError("Student not found", 404);
-    }
-  }
-
-
-  const task = await Task.findByIdAndUpdate(
-    req.params.id,
-    req.body,
+  const task = await Task.findOneAndUpdate(
+    {
+      _id: req.params.id,
+      student: req.student._id
+    },
+    {
+      title: req.body.title,
+      description: req.body.description,
+      completed: req.body.completed
+    },
     {
       new: true,
       runValidators: true
     }
-  ).populate("student");
+  ).populate("student", "name email");
 
   if (!task) {
     throw new AppError("Task not found", 404);
@@ -121,7 +119,10 @@ export const updateTask = asyncHandler(async (req, res) => {
 });
 
 export const deleteTask = asyncHandler(async (req, res) => {
-  const task = await Task.findByIdAndDelete(req.params.id);
+  const task = await Task.findOneAndDelete({
+    _id: req.params.id,
+    student: req.student._id
+  });
 
   if (!task) {
     throw new AppError("Task not found", 404);
