@@ -21,6 +21,16 @@ const errorMiddleware = (err, req, res, next) => {
     message = "Email already exists";
   }
 
+  if (err.name === "JsonWebTokenError") {
+  statusCode = 401;
+  message = "Invalid token";
+}
+
+if (err.name === "TokenExpiredError") {
+  statusCode = 401;
+  message = "Token expired";
+}
+
   res.status(statusCode).json({
     message
   });
