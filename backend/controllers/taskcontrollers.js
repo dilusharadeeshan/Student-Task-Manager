@@ -5,13 +5,12 @@ import AppError from "../utils/appError.js";
 
 export const createTask = asyncHandler(async (req, res) => {
 
-  const student = await Student.findById(req.body.student);
-
-  if (!student) {
-    throw new AppError("Student not found", 404);
-  }
-
-  const task = await Task.create(req.body);
+   const task = await Task.create({
+    title: req.body.title,
+    description: req.body.description,
+    completed: req.body.completed,
+    student: req.student._id
+  });
 
   res.status(201).json(task);
 });
