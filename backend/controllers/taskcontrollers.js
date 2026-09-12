@@ -95,23 +95,21 @@ export const getTaskById = asyncHandler(async (req, res) => {
 });
 
 export const updateTask = asyncHandler(async (req, res) => {
- if (req.body.student) {
-    const student = await Student.findById(req.body.student);
-
-    if (!student) {
-      throw new AppError("Student not found", 404);
-    }
-  }
-
-
-  const task = await Task.findByIdAndUpdate(
-    req.params.id,
-    req.body,
+  const task = await Task.findOneAndUpdate(
+    {
+      _id: req.params.id,
+      student: req.student._id
+    },
+    {
+      title: req.body.title,
+      description: req.body.description,
+      completed: req.body.completed
+    },
     {
       new: true,
       runValidators: true
     }
-  ).populate("student");
+  ).populate("student", "name email");
 
   if (!task) {
     throw new AppError("Task not found", 404);
