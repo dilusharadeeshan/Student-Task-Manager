@@ -42,3 +42,41 @@ export const loginStudent = asyncHandler(async (req, res) => {
   token
 });
 });
+
+
+export const registerStudent = asyncHandler(async (req, res) => {
+  const { name, email, age, password } = req.body;
+
+  const existingStudent = await Student.findOne({ email });
+
+  if (existingStudent) {
+    throw new AppError("Email already exists", 409);
+  }
+
+  const student = await Student.create({
+    name,
+    email,
+    age,
+    password
+  });
+
+  
+  const studentResponse = await Student.findById(student._id);
+
+   const token = jwt.sign(
+    {
+      studentId: student._id
+    },
+    process.env.JWT_SECRET,
+    {
+      expiresIn: "1d"
+    }
+  );
+
+
+  res.status(201).json({
+    message: "Student registered successfully",
+    student: studentResponse,
+    token
+  });
+});
