@@ -119,7 +119,10 @@ export const updateTask = asyncHandler(async (req, res) => {
 });
 
 export const deleteTask = asyncHandler(async (req, res) => {
-  const task = await Task.findByIdAndDelete(req.params.id);
+  const task = await Task.findOneAndDelete({
+    _id: req.params.id,
+    student: req.student._id
+  });
 
   if (!task) {
     throw new AppError("Task not found", 404);

@@ -13,7 +13,7 @@ router.post("/",protect, createTask);
 router.get("/",protect, getTasks)
 router.get("/:id",protect, getTaskById);
 router.put("/:id",protect, updateTask);
-router.delete("/:id", deleteTask);
+router.delete("/:id",protect, deleteTask);
 
 
 export default router;
