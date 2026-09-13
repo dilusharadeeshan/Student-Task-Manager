@@ -7,20 +7,21 @@ import {
   deleteStudent
 } from "../controllers/studentcontrollers.js";
 
+import protect from "../middleware/authMiddleware.js";
+
 const router = express.Router();
 
 
-router.post("/", createStudent);
 
-router.get("/", getAllStudents);
+router.get("/", protect, getAllStudents);
 
-router.get("/:id", getStudentById);
-
-
-router.put("/:id", updateStudent);
+router.get("/:id", protect, getStudentById);
 
 
-router.delete("/:id", deleteStudent);
+router.put("/:id", protect, updateStudent);
+
+
+router.delete("/:id", protect, deleteStudent);
 
 
 
