@@ -5,6 +5,8 @@ import Student from "../models/student.js";
 import asyncHandler from "../middleware/asyncHandler.js";
 import AppError from "../utils/appError.js";
 
+import Task from "../models/task.js";
+
 export const loginStudent = asyncHandler(async (req, res) => {
   const { email, password } = req.body;
 
@@ -107,5 +109,18 @@ export const updateCurrentStudent = asyncHandler(async (req, res) => {
   res.status(200).json({
     message: "Profile updated successfully",
     student: updatedStudent
+  });
+});
+
+//delete student and all tasks associated with the student
+export const deleteCurrentStudent = asyncHandler(async (req, res) => {
+  await Task.deleteMany({
+    student: req.student._id
+  });
+
+  await Student.findByIdAndDelete(req.student._id);
+
+  res.status(200).json({
+    message: "Student account deleted successfully"
   });
 });
