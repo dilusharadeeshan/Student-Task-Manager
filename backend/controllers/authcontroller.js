@@ -87,3 +87,25 @@ export const getCurrentStudent = asyncHandler(async (req, res) => {
     student: req.student
   });
 });
+
+
+export const updateCurrentStudent = asyncHandler(async (req, res) => {
+  const student = await Student.findById(req.student._id);
+
+  if (!student) {
+    throw new AppError("Student not found", 404);
+  }
+
+  student.name = req.body.name ?? student.name;
+  student.email = req.body.email ?? student.email;
+  student.age = req.body.age ?? student.age;
+
+  await student.save();
+
+  const updatedStudent = await Student.findById(student._id);
+
+  res.status(200).json({
+    message: "Profile updated successfully",
+    student: updatedStudent
+  });
+});
